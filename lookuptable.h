@@ -1,8 +1,9 @@
 
-#include <string>
+#include <fstream>
 #include <iostream>
-#include <vector>
 #include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -167,7 +168,7 @@ public:
 	 * 
 	 * @returns coordiante on success, coordinate at 0 on error
 	 */
-	U get_x_coord(const unsigned int x)
+	U get_x_coord(const int x)
 	{
 		if (x > x_size)
 			return x_coords[0]; // error
@@ -180,7 +181,7 @@ public:
 	 * 
 	 * @returns coordiante on success, coordinate at 0 on error
 	 */
-	U get_y_coord(const unsigned int y)
+	U get_y_coord(const int y)
 	{
 		if (y > y_size)
 			return y_coords[0]; // error
@@ -514,7 +515,30 @@ public:
 	 * 
 	 * @returns true on success, false on error
 	 */
-	bool load_file(const string file="");
+	bool load_file(const string file="")
+	{
+		string content;
+		string line;
+		bool res;
+
+		if (! file.empty()) {
+			file_name = file;
+		}
+		if (file_name.empty())
+			return false;  // error
+
+		ifstream from(file_name.c_str());
+		if (!from)
+			return false;  // error
+
+		while (getline(from, line)) {
+			content += line + "\n";
+		}
+
+		res = load(content);
+
+		return res;
+	}
 	// }}}
 
 	// {{{ save(file_name)
@@ -526,9 +550,17 @@ public:
 	 */
 	bool save(const string new_file_name="") {
 
-		// TODO
-		// open file
-		// outfile << table ;
+		if (! new_file_name.empty()) {
+			file_name = new_file_name;
+		}
+		if (file_name.empty())
+			return false;  // error
+
+		ofstream to(file_name.c_str());
+		if (!to)
+			return false;  // error
+
+		to << (*this) << endl;
 
 		return true; // OK
 	}
