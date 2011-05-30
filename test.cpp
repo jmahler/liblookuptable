@@ -1,7 +1,8 @@
 
-#include "lookuptable.h"
-#include <assert.h>
+#include "LookUpTable.h"
+#include "LUTPoint.h"
 
+#include <assert.h>
 #include <iostream>
 
 using namespace std;

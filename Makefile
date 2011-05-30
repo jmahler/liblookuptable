@@ -11,7 +11,7 @@ all: test
 doc: *.cpp *.h
 	doxygen  # using Doxyfile 
 
-test: test.cpp $(OBJECTS) lookuptable.h
+test: test.cpp $(OBJECTS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 %.o: %.cpp %.h

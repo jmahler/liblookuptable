@@ -58,6 +58,14 @@ string unbracket(const string sin)
 }
 // }}}
 
+/**
+ * Look up table operations.
+ *
+ * In the template parameters the first argument defines the
+ * type of the values in the table and the second defines the
+ * values of the coordinates.  The type of both the x and the y
+ * coordinates must be the same.
+ */
 template<class T, class U>
 class LookUpTable {
 private:
@@ -284,6 +292,46 @@ public:
 	};
 	// }}}
 
+	// {{{ lookup(x_val, y_val)
+	/**
+	 * Look up a value in the table by using x and y values.
+	 *
+	 * @returns position on success
+	 *
+	 * When looking up values the position is not absolute unless
+	 * the coordinates are exact.
+	 * In nearly all situations the position is a fraction between
+	 * its neighbor values.
+	 * And there are also situations when it is on the edge of the
+	 * map these values are undefined.
+	 *
+	 \verbatim
+
+	    a | b | c
+	    --+--+---
+	    d | X | f
+	    --+--+---
+	    g | h | i
+
+	 \endverbatim
+	 *
+	 * To resolve this situation a set of all values is returned
+	 * along with a weight to describe the contribution of each
+	 * value to the final value.
+	 */
+	T lookup(const int x, const int y) const
+	{
+		int pos;
+
+		if (x >= x_size || y >= y_size)
+			return vals[0];  // error
+
+		pos = _get_pos(x, y);
+
+		return vals[pos];
+	};
+	// }}}
+
 	// {{{ operator<<
 	friend ostream& operator<<(ostream& out, const LookUpTable<T, U>& lut)
 	{
@@ -507,6 +555,30 @@ public:
 	}
 	// }}}
 
+	// {{{ set_file(file)
+	/**
+	 * Set the current file name.
+	 *
+	 * @arg file name
+	 */
+	void set_file(const string new_file_name)
+	{
+		file_name = new_file_name;
+	}
+	// }}}
+
+	// {{{ get_file()
+	/**
+	 * Get the current file name.
+	 *
+	 * @returns file name
+	 */
+	string get_file()
+	{
+		return file_name;
+	}
+	// }}}
+
 	// {{{ load_file(file)
 	/**
 	 * Assign the values of the table by using the definition from a file.
@@ -553,17 +625,45 @@ public:
 		if (! new_file_name.empty()) {
 			file_name = new_file_name;
 		}
-		if (file_name.empty())
+		if (file_name.empty()) {
+			cerr << "LookUpTable::save(), error, no file name\n";
 			return false;  // error
+		}
 
 		ofstream to(file_name.c_str());
-		if (!to)
+		if (!to) {
+			cerr << "LookUpTable::save(), error trying to open file\n";
 			return false;  // error
+		}
 
 		to << (*this) << endl;
 
 		return true; // OK
 	}
+	// }}}
+
+	// {{{ operator==
+	/**
+	 * Test whether one object is equal to the other.
+	 *
+	 * @returns true if same, false otherwise
+	 *
+	 * Currently only tests the values and does not test
+	 * the coordinates.
+	 */
+	friend bool operator==(const LookUpTable<T, U>& a, const LookUpTable<T, U>& b)
+	{
+		if (a.x_size != b.x_size || a.y_size != b.y_size)
+			return false;
+
+		int size = a.x_size * a.y_size;
+		for (int i = 0; i < size; i++) {
+			if (a.vals[i] != b.vals[i])
+				return false;
+		}
+
+		return true;
+	};
 	// }}}
 
 };
