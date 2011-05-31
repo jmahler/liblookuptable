@@ -684,4 +684,16 @@ public:
 	};
 	// }}}
 
+	// {{{ operator!=
+	/**
+	 * Test whether one object is NOT equal to the other.
+	 *
+	 * @returns true if not equal, false otherwise
+	 */
+	friend bool operator!=(const LookUpTable<T, U>& a, const LookUpTable<T, U>& b)
+	{
+		return (! (a == b));
+	};
+	// }}}
+
 };

@@ -11,8 +11,8 @@ all: test
 doc: *.cpp *.h
 	doxygen  # using Doxyfile 
 
-test: test.cpp $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@
+test: test.cpp LookUpTable.h
+	$(CC) $(CFLAGS) $< -o $@
 
 %.o: %.cpp %.h
 	$(CC) $(CFLAGS) -c $<
