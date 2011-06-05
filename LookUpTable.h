@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -24,6 +25,8 @@
 #include <vector>
 
 using namespace std;
+
+#define EPSILON 0.001  // for floating point comparisons
 
 // {{{ trim()
 /*
@@ -734,8 +737,9 @@ public:
 
 		int size = a.x_size * a.y_size;
 		for (int i = 0; i < size; i++) {
-			if (a.vals[i] != b.vals[i])
+			if (fabs(a.vals[i] - b.vals[i]) > EPSILON) {
 				return false;
+			}
 		}
 
 		return true;
