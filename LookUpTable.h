@@ -139,12 +139,70 @@ public:
 	};
 	// }}}
 
+	// {{{ LookUpTable (copy constructor)
+	/**
+	 * Copy constructor.
+	 */
+	LookUpTable(const LookUpTable& a) {
+		x_size = a.x_size;
+		y_size = a.y_size;
+		x_title = a.x_title;
+		y_title = a.y_title;
+		file_name = a.file_name;
+
+		vals = new T[x_size * y_size];
+		x_coords = new U[x_size];
+		y_coords = new U[y_size];
+
+		int i;
+		for (i = 0; i < (x_size * y_size); i++) {
+			vals[i] = a.vals[i];
+		}
+		for (i = 0; i < x_size; i++) {
+			x_coords[i] = a.x_coords[i];
+		}
+		for (i = 0; i < y_size; i++) {
+			y_coords[i] = a.y_coords[i];
+		}
+	};
+	// }}}
+
+	// {{{ operator=
+	/**
+	 * Assignment operator.
+	 */
+	LookUpTable<T, U> operator=(const LookUpTable<T, U>& a) {
+		x_size = a.x_size;
+		y_size = a.y_size;
+		x_title = a.x_title;
+		y_title = a.y_title;
+		file_name = a.file_name;
+
+		int i;
+		for (i = 0; i < (x_size * y_size); i++) {
+			vals[i] = a.vals[i];
+		}
+		for (i = 0; i < x_size; i++) {
+			x_coords[i] = a.x_coords[i];
+		}
+		for (i = 0; i < y_size; i++) {
+			y_coords[i] = a.y_coords[i];
+		}
+
+		return *this;
+	};
+	// }}}
+
 	// {{{ ~LookUpTable()
 	~LookUpTable()
 	{
-		delete[] vals;
-		delete[] x_coords;
-		delete[] y_coords;
+		//if (NULL != vals) {
+			delete[] vals;
+			delete[] x_coords;
+			delete[] y_coords;
+
+		//	vals = NULL;
+		//}
 	};
 	// }}}
 
@@ -695,5 +753,6 @@ public:
 		return (! (a == b));
 	};
 	// }}}
+
 
 };

@@ -81,6 +81,36 @@ int main()
 	}
 	// }}}
 
+	// {{{ equality (==)
+	{
+	LookUpTable<int, int> lut1(4, 4);
+	LookUpTable<int, int> lut2(4, 4);
+
+	assert(lut1 == lut2);
+
+	lut2.set(1, 2, 4);
+	assert(lut1 != lut2);
+
+	lut1.set(2, 1, 4);
+	assert(lut1 != lut2);
+
+	lut1.set(1, 2, 4);
+	assert(lut1 != lut2);
+
+	lut2.set(2, 1, 4);
+	assert(lut1 == lut2);
+
+	lut1.set(3, 3, 12);
+	assert(lut1 != lut2);
+	assert(lut1 == lut1);
+
+	lut1 = lut2;  // assignment operator
+	assert(lut1 == lut1);
+	lut1.set(0, 1, 6);
+	assert(lut1 != lut2);
+	}
+	// }}}
+
 	cout << "All tests passed.\n";
 
 	return 0;
